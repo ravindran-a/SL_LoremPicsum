@@ -10,6 +10,7 @@ import XCTest
 final class LoremPicsumUITests: XCTestCase {
 
     override func setUpWithError() throws {
+        super.setUpWithError()
         // Put setup code here. This method is called before the invocation of each test method in the class.
 
         // In UI tests it is usually best to stop immediately when a failure occurs.
@@ -19,12 +20,13 @@ final class LoremPicsumUITests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
+        super.tearDownWithError()
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
     func testExample() throws {
         // UI tests must launch the application that they test.
-        let app = XCUIApplication()
+        let app: XCUIApplication = XCUIApplication()
         app.launch()
 
         // Use XCTAssert and related functions to verify your tests produce the correct results.
