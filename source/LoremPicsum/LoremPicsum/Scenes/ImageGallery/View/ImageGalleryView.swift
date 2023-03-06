@@ -13,8 +13,8 @@ struct ImageGalleryView: View {
     @State var showImageDetail: Bool = false
     var threeColumnGrid: [GridItem] = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
-    init() {
-        self.viewModel = ImageGalleryViewModel(apiService: ImageService())
+    init(viewModel: ImageGalleryViewModel) {
+        self.viewModel = viewModel
     }
     
     var loader: some View {
@@ -72,7 +72,7 @@ struct ImageGalleryView: View {
             }))
         }
         .sheet(isPresented: $showImageDetail) {
-            ImageViewerView(image: viewModel.selectedImage)
+            ImageViewerView(viewModel: ImageViewerViewModel(image: viewModel.selectedImage))
                 .onDisappear {
                     viewModel.selectedImage = nil
                 }

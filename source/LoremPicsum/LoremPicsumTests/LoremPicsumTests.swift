@@ -11,28 +11,34 @@ import XCTest
 final class LoremPicsumTests: XCTestCase {
 
     override func setUpWithError() throws {
-        super.setUpWithError()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        try super.setUpWithError()
     }
 
     override func tearDownWithError() throws {
-        super.tearDownWithError()
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        try super.tearDownWithError()
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    func testDefaultsManager() throws {
+        UserDefaultsManager.setInt(0, forKey: .favourites)
+        XCTAssertTrue(UserDefaultsManager.integerForKey(.favourites) == 0)
+        
+        UserDefaultsManager.setString("test", forKey: .favourites)
+        XCTAssertTrue(UserDefaultsManager.stringForKey(.favourites) == "test")
+        
+        UserDefaultsManager.setBool(true, forKey: .favourites)
+        XCTAssertTrue(UserDefaultsManager.boolForKey(.favourites) == true)
+        
+        UserDefaultsManager.removeAllUserDefaultValues()
+        UserDefaultsManager.setString("test", forKey: .favourites)
+        UserDefaultsManager.removeValueForKey(.favourites)
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    
+    func testFavouritesManager() throws {
+        let testData: [ImageElement] = [ImageElement(id: "0", author: "", width: 100, height: 100, url: "", downloadURL: ""),
+                        ImageElement(id: "1", author: "", width: 100, height: 100, url: "", downloadURL: "")]
+        FavouritesManager.shared.updateFavouriteList(testData)
+        FavouritesManager.shared.updateFavouriteItem(ImageElement(id: "2", author: "", width: 100, height: 100, url: "", downloadURL: ""))
+        XCTAssertTrue(FavouritesManager.shared.getListOfFavourites()?.count == 3)
     }
 
 }

@@ -11,12 +11,12 @@ import Kingfisher
 import Combine
 
 struct ImageViewerView: View {
-    var image: ImageElement?
-    @State var isFavourite: Bool = false
+    
+    @ObservedObject var viewModel: ImageViewerViewModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    init(image: ImageElement?) {
-        self.image = image
+    init(viewModel: ImageViewerViewModel) {
+        self.viewModel = viewModel
     }
     
     var closeButton: some View {
@@ -29,13 +29,13 @@ struct ImageViewerView: View {
     
     var favouriteButton: some View {
         Button {
-            updateFavourite()
+            viewModel.updateFavourite()
         } label: {
             HStack {
-                if let confirmedImage: UIImage = UIImage(named: isFavourite ? "starFilled" : "starEmpty") {
+                if let confirmedImage: UIImage = UIImage(named: viewModel.isFavourite ? "starFilled" : "starEmpty") {
                     Image(uiImage: confirmedImage)
                 }
-                Text(isFavourite ? "Remove from Favourites" : "Add to Favourites")
+                Text(viewModel.isFavourite ? "Remove from Favourites" : "Add to Favourites")
             }
         }
     }
@@ -43,7 +43,7 @@ struct ImageViewerView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 10) {
-                if let confirmedImage: String = getImageUrl(), let confirmedUrl: URL = URL(string: confirmedImage) {
+                if let confirmedImage: String = viewModel.getImageUrl(), let confirmedUrl: URL = URL(string: confirmedImage) {
                     KFImage(confirmedUrl)
                         .placeholder({
                             Image("placeholder")
@@ -62,35 +62,8 @@ struct ImageViewerView: View {
                 favouriteButton
             }
         }.onAppear {
-            isFavourite = isImageInfavourites()
+            viewModel.isFavourite = viewModel.isImageInfavourites()
         }
-    }
-    
-    func getImageUrl() -> String? {
-        return APIEndPoints.ImageData.imageUrl(id: image?.id ?? "", width: 300, height: 300).url
-    }
-    
-    func getImageId() -> String? {
-        return image?.id
-    }
-    
-    func getImageAuthor() -> String? {
-        return image?.author
-    }
-    
-    func isImageInfavourites() -> Bool {
-        guard let confirmedImage: ImageElement = image else {
-            return false
-        }
-        return FavouritesManager.shared.isFavouriteImage(confirmedImage)
-    }
-    
-    func updateFavourite() {
-        guard let confirmedImage: ImageElement = image else {
-            return
-        }
-        FavouritesManager.shared.updateFavouriteItem(confirmedImage)
-        isFavourite = isImageInfavourites()
     }
     
 }

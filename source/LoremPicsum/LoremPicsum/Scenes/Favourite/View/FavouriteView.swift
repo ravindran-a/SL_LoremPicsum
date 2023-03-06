@@ -14,8 +14,8 @@ struct FavouriteView: View {
     var threeColumnGrid: [GridItem] = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     @State var showImageDetail: Bool = false
     
-    init() {
-        self.viewModel = FavouriteViewModel()
+    init(viewModel: FavouriteViewModel) {
+        self.viewModel = viewModel
     }
     
     var loader: some View {
@@ -56,7 +56,7 @@ struct FavouriteView: View {
         .navigationBarTitle("Favourites")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showImageDetail) {
-            ImageViewerView(image: viewModel.selectedImage)
+            ImageViewerView(viewModel: ImageViewerViewModel(image: viewModel.selectedImage))
                 .onDisappear {
                     viewModel.selectedImage = nil
                     viewModel.updateData()
